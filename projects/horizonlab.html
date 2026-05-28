@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HorizonLab - antoineview</title>
+        <meta name="description" content="Project notes on HorizonLab." />
+        <link
+            rel="preload"
+            href="../fonts/BBB_Karrik.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="../fonts/Garabosse-Gaillarde.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/article.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="nav-blur" aria-hidden="true">
+                <span style="--b: 2px; --t: 45%; --e: 100%"></span>
+                <span style="--b: 4px; --t: 38%; --e: 88%"></span>
+                <span style="--b: 8px; --t: 64%; --e: 84%"></span>
+                <span style="--b: 16px; --t: 48%; --e: 68%"></span>
+                <span style="--b: 28px; --t: 32%; --e: 52%"></span>
+                <span style="--b: 44px; --t: 16%; --e: 36%"></span>
+            </div>
+            <nav class="nav">
+                <a class="brand" href="../index.html">antoineview</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#music">Music</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="article">
+            <h1 class="article-title">HorizonLab</h1>
+
+            <article class="paper">
+                <p>
+                    HorizonLab is a multiplayer party game built around a pool
+                    of small, accessible mini-games. The pitch is simple:
+                    something casual players can pick up in seconds, but with
+                    enough variety and replay value that regular players keep
+                    coming back.
+                </p>
+                <p>
+                    The whole thing is built around the social side. Friends and
+                    family playing together, online.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/hlabs_1.webp"
+                    alt="HorizonLab gameplay, the player character in a colourful arena"
+                />
+                <figcaption>the character, in one of the arenas</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    Think Fall Guys or Mario Party in spirit. Built in Unity,
+                    written in C#, targeting Windows.
+                </p>
+                <p>
+                    The technical brief is unforgiving. A simple but attractive
+                    UI, quick onboarding, and gameplay that has to stay fluid
+                    even with multiplayer netcode and AI running underneath.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--r">
+                <img
+                    src="../public/illustrations/articles/hlabs_2.webp"
+                    alt="HorizonLab level layout in wireframe, top-down view"
+                />
+                <figcaption>level layout, top-down</figcaption>
+            </figure>
+
+            <article class="paper paper--last">
+                <p>
+                    Online multiplayer is the core of the game. Players compete
+                    or cooperate in real time, across a rotating roster of
+                    mini-games. AI handles a few of the challenges and helps
+                    thicken the atmosphere.
+                </p>
+                <p>
+                    The goal: a launch that's quick to pick up, varied enough to
+                    stay fresh, and deep enough to keep people coming back week
+                    after week.
+                </p>
+                <img
+                    class="pen"
+                    src="../public/illustrations/md_pen.png"
+                    alt="Pen sketch flourish signing off the page"
+                />
+            </article>
+        </main>
+    </body>
+</html>

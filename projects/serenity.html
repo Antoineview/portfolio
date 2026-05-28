@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Serenity - antoineview</title>
+        <meta name="description" content="Project notes on Serenity." />
+        <link
+            rel="preload"
+            href="../fonts/BBB_Karrik.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="../fonts/Garabosse-Gaillarde.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/article.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="nav-blur" aria-hidden="true">
+                <span style="--b: 2px; --t: 45%; --e: 100%"></span>
+                <span style="--b: 4px; --t: 38%; --e: 88%"></span>
+                <span style="--b: 8px; --t: 64%; --e: 84%"></span>
+                <span style="--b: 16px; --t: 48%; --e: 68%"></span>
+                <span style="--b: 28px; --t: 32%; --e: 52%"></span>
+                <span style="--b: 44px; --t: 16%; --e: 36%"></span>
+            </div>
+            <nav class="nav">
+                <a class="brand" href="../index.html">antoineview</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#music">Music</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="article">
+            <h1 class="article-title">Serenity</h1>
+
+            <article class="paper">
+                <p>
+                    Serenity is a rewrite. The original software is written in
+                    Pascal and has been around for a while. Dentists use it to
+                    track the profitability of their practice, day by day, act
+                    by act.
+                </p>
+                <p>
+                    The point of the rewrite is to bring it forward without
+                    losing what already works. The core is moving to Go, for a
+                    smaller, faster, easier-to-maintain backend.
+                </p>
+                <p>
+                    On top of that I'm redoing the UX and UI from scratch. The
+                    old interface served its purpose but feels every bit its
+                    age. The new design aims for something calm and legible.
+                </p>
+            </article>
+
+            <article class="paper paper--last">
+                <p>
+                    The new front-end is a modern Next.js app talking to the Go
+                    backend. Same business logic, a fresh skin, and a much
+                    smoother day-to-day for the people who actually use it.
+                </p>
+                <img
+                    class="pen"
+                    src="../public/illustrations/md_pen.png"
+                    alt="Pen sketch flourish signing off the page"
+                />
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/serenn.png"
+                    alt="Serenity dashboard preview, the same shot used on the projects TV"
+                />
+                <figcaption>dashboard, work in progress</figcaption>
+            </figure>
+        </main>
+    </body>
+</html>

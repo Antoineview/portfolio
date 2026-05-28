@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>antoineview — Technical report</title>
+<style>
+    @page {
+        size: A4;
+        margin: 18mm 16mm 18mm 16mm;
+    }
+    :root {
+        --ink: #14181d;
+        --muted: #5a6470;
+        --rule: #d8dde3;
+        --accent: #2554c7;
+        --code-bg: #f4f6f9;
+        --highlight-bg: #fff8e1;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+            Arial, sans-serif;
+        color: var(--ink);
+        font-size: 10.5pt;
+        line-height: 1.5;
+    }
+    h1, h2, h3, h4 {
+        line-height: 1.2;
+        font-weight: 700;
+        color: var(--ink);
+    }
+    h1 {
+        font-size: 26pt;
+        margin: 0 0 4pt;
+        letter-spacing: -0.01em;
+    }
+    h2 {
+        font-size: 17pt;
+        margin: 22pt 0 6pt;
+        border-bottom: 1.5pt solid var(--ink);
+        padding-bottom: 4pt;
+        page-break-after: avoid;
+    }
+    h3 {
+        font-size: 12.5pt;
+        margin: 14pt 0 4pt;
+        page-break-after: avoid;
+    }
+    h4 {
+        font-size: 10.5pt;
+        margin: 10pt 0 3pt;
+        color: var(--accent);
+        page-break-after: avoid;
+    }
+    p { margin: 0 0 8pt; }
+    ul, ol { margin: 0 0 8pt; padding-left: 18pt; }
+    li { margin-bottom: 3pt; }
+    code, pre {
+        font-family: "SF Mono", Menlo, Consolas, monospace;
+        font-size: 9pt;
+    }
+    code {
+        background: var(--code-bg);
+        padding: 0.5pt 3pt;
+        border-radius: 2pt;
+    }
+    pre {
+        background: var(--code-bg);
+        padding: 8pt 10pt;
+        border-radius: 3pt;
+        margin: 6pt 0 10pt;
+        white-space: pre-wrap;
+        line-height: 1.4;
+        page-break-inside: avoid;
+    }
+    pre code { background: transparent; padding: 0; }
+    .lede {
+        font-size: 11pt;
+        color: var(--muted);
+        margin-bottom: 14pt;
+    }
+    .tag-grid {
+        display: grid;
+        grid-template-columns: 90pt 1fr;
+        gap: 4pt 14pt;
+        margin-bottom: 8pt;
+        font-size: 9.5pt;
+    }
+    .tag-grid dt {
+        font-family: "SF Mono", Menlo, monospace;
+        font-size: 9pt;
+        background: var(--code-bg);
+        padding: 1pt 5pt;
+        border-radius: 2pt;
+        font-weight: 600;
+        height: fit-content;
+    }
+    .tag-grid dd { margin: 0; }
+    .deep-dive {
+        background: var(--highlight-bg);
+        border-left: 3pt solid #f0b400;
+        padding: 10pt 12pt 6pt;
+        margin: 10pt 0 14pt;
+        page-break-inside: avoid;
+    }
+    .deep-dive h3 { margin-top: 0; }
+    .toc {
+        font-size: 10pt;
+        column-count: 2;
+        column-gap: 16pt;
+        margin-bottom: 18pt;
+    }
+    .toc a {
+        color: var(--ink);
+        text-decoration: none;
+        display: block;
+        padding: 1.5pt 0;
+    }
+    .meta {
+        color: var(--muted);
+        font-size: 9.5pt;
+        margin-bottom: 18pt;
+    }
+    .note {
+        font-size: 9.5pt;
+        color: var(--muted);
+        font-style: italic;
+        margin: 4pt 0 8pt;
+    }
+    .prop-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9.5pt;
+        margin-bottom: 10pt;
+    }
+    .prop-table th, .prop-table td {
+        text-align: left;
+        vertical-align: top;
+        padding: 4pt 6pt;
+        border-bottom: 0.5pt solid var(--rule);
+    }
+    .prop-table th {
+        background: var(--code-bg);
+        font-weight: 700;
+    }
+    .prop-table tr { page-break-inside: avoid; }
+    .prop-table code {
+        background: transparent;
+        padding: 0;
+        font-size: 9pt;
+    }
+    .star {
+        color: #f0b400;
+        font-weight: 700;
+    }
+    section { page-break-inside: auto; }
+    .pagebreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<h1>antoineview</h1>
+<div class="lede">A technical reference for the HTML, CSS and modern web-platform features powering the portfolio.</div>
+<div class="meta">Covers all tags and CSS properties used in <code>index.html</code>, the eight project pages, <code>css/style.css</code> and <code>css/article.css</code>. Special focus on scroll-driven animations, SVG path animation, and sticky positioning.</div>
+
+<h2>Contents</h2>
+<nav class="toc">
+    <a href="#html">1. HTML tags</a>
+    <a href="#css-categories">2. CSS properties by category</a>
+    <a href="#walkthrough"><span class="star">★</span> 3. Section-by-section walkthrough</a>
+    <a href="#scroll-timeline"><span class="star">★</span> 4. Scroll-driven animations</a>
+    <a href="#svg-anim"><span class="star">★</span> 5. SVG path animation</a>
+    <a href="#sticky"><span class="star">★</span> 6. Sticky &amp; fixed positioning</a>
+    <a href="#at-rules">7. At-rules (@font-face, @media, @keyframes, @supports)</a>
+    <a href="#patterns">8. Recurring techniques</a>
+</nav>
+
+<!-- ====================================================== -->
+<h2 id="html">1. HTML tags</h2>
+<p>Every tag that appears in <code>index.html</code> or a project page. Beyond the standard semantics, each entry notes how this project actually uses the tag.</p>
+
+<h3>Document scaffolding</h3>
+<dl class="tag-grid">
+<dt>&lt;!doctype html&gt;</dt><dd>HTML5 document declaration. Must be the very first line — without it browsers fall into quirks mode and many layout rules behave differently.</dd>
+<dt>&lt;html lang&gt;</dt><dd>Root element. <code>lang="en"</code> tells screen readers and search engines the document language.</dd>
+<dt>&lt;head&gt;</dt><dd>Container for metadata that isn't rendered: title, meta tags, fonts, stylesheets.</dd>
+<dt>&lt;meta&gt;</dt><dd>Single-attribute metadata. Used here for character encoding (<code>charset</code>), responsive viewport (<code>name="viewport"</code>), and SEO description.</dd>
+<dt>&lt;title&gt;</dt><dd>Browser tab label and default bookmark name.</dd>
+<dt>&lt;link&gt;</dt><dd>External resource. Two uses: <code>rel="stylesheet"</code> for CSS, and <code>rel="preload" as="font"</code> to prefetch web fonts before the first paint so no FOUT (Flash Of Unstyled Text).</dd>
+<dt>&lt;body&gt;</dt><dd>Holds everything that renders.</dd>
+</dl>
+
+<h3>Semantic structure</h3>
+<dl class="tag-grid">
+<dt>&lt;header&gt;</dt><dd>Top region. Holds the fixed nav and its progressive-blur backdrop.</dd>
+<dt>&lt;nav&gt;</dt><dd>Primary navigation. Contains the site links (About / Projects / Music).</dd>
+<dt>&lt;main&gt;</dt><dd>The single main landmark for the page. There must be exactly one. Screen readers can jump straight to it.</dd>
+<dt>&lt;section&gt;</dt><dd>A thematic grouping with its own heading. Hero, About, Projects, Music, etc.</dd>
+<dt>&lt;article&gt;</dt><dd>Self-contained content; used here for each <code>.paper</code> sheet on a project page.</dd>
+<dt>&lt;footer&gt;</dt><dd>Closing region. (Site footer.)</dd>
+<dt>&lt;figure&gt; / &lt;figcaption&gt;</dt><dd>An image with its caption, kept together semantically. Used for every polaroid on project pages.</dd>
+</dl>
+
+<h3>Content &amp; text</h3>
+<dl class="tag-grid">
+<dt>&lt;h1&gt;</dt><dd>Top-level heading. One per page (visually hidden on the homepage because the SVG name takes its place).</dd>
+<dt>&lt;h2&gt;</dt><dd>Section heading: About, Projects, Music, Currently working on…</dd>
+<dt>&lt;p&gt;</dt><dd>Paragraph. The atomic block of body copy.</dd>
+<dt>&lt;ul&gt; / &lt;ol&gt;</dt><dd>Unordered / ordered list. The nav links are an <code>&lt;ul&gt;</code>; the projects timeline is an <code>&lt;ol&gt;</code> (the order matters, it's chronological).</dd>
+<dt>&lt;li&gt;</dt><dd>One list item. Each project is one <code>&lt;li&gt;</code>.</dd>
+<dt>&lt;a href&gt;</dt><dd>Hyperlink. The internal jumps (<code>#about</code>) plus the cassettes that link to project pages.</dd>
+<dt>&lt;br&gt;</dt><dd>Explicit line break inside a paragraph (used sparingly in the About text).</dd>
+<dt>&lt;b&gt;</dt><dd>Stylistically bold inline text without semantic emphasis (used inside <code>.meta</code> on music sleeves).</dd>
+</dl>
+
+<h3>Media &amp; presentation</h3>
+<dl class="tag-grid">
+<dt>&lt;img src alt&gt;</dt><dd>Raster/vector image. <code>alt</code> is mandatory — empty <code>alt=""</code> for purely decorative images (camera, portrait), descriptive <code>alt</code> for content images (project previews).</dd>
+<dt>&lt;div&gt;</dt><dd>Generic block grouping with no semantics. Used for layout shells (<code>.about-stage</code>, <code>.nav-blur</code>, etc.).</dd>
+<dt>&lt;span&gt;</dt><dd>Generic inline grouping. Used for the progressive blur layers — each <code>&lt;span&gt;</code> carries inline CSS custom properties (<code>--b</code>, <code>--t</code>, <code>--e</code>, <code>--m</code>) that the stylesheet reads.</dd>
+</dl>
+
+<h3>SVG (used in the animated name)</h3>
+<dl class="tag-grid">
+<dt>&lt;svg viewBox&gt;</dt><dd>Inline vector graphic. <code>viewBox</code> defines the internal coordinate system; the SVG then scales fluidly via the <code>.draw-name { width: min(60vw, 32.5rem) }</code> rule.</dd>
+<dt>&lt;g&gt;</dt><dd>Group element. Used to apply a single SVG <code>filter</code> (the glow halo) to all strokes at once.</dd>
+<dt>&lt;path d&gt;</dt><dd>The geometry. Each letter stroke is one <code>&lt;path&gt;</code> with a vector <code>d</code> attribute and a <code>pathLength="1"</code> normalisation (see §4).</dd>
+<dt>&lt;defs&gt;</dt><dd>Reusable definitions. The gradients, filter and clip paths sit inside <code>&lt;defs&gt;</code>; nothing inside is rendered directly, only referenced by id.</dd>
+<dt>&lt;filter&gt;</dt><dd>SVG filter primitive container. Used for the soft glow behind each stroke.</dd>
+<dt>&lt;feGaussianBlur&gt;, &lt;feMerge&gt;, etc.</dt><dd>Filter primitives composing the glow.</dd>
+<dt>&lt;linearGradient&gt; / &lt;stop&gt;</dt><dd>Defines the colour gradients on individual strokes.</dd>
+</dl>
+
+<!-- ====================================================== -->
+<h2 id="css-categories">2. CSS properties by category</h2>
+<p>Properties grouped by what they actually do, with the concrete role each plays in the site.</p>
+
+<h3>Layout: block model</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>box-sizing</code></td><td>Switches width/height calculation to include padding+border. Set globally to <code>border-box</code> so all our widths "mean what they say."</td></tr>
+<tr><td><code>display</code></td><td>Sets the formatting context. We use <code>grid</code>, <code>flex</code>, <code>block</code>, <code>inline</code> and <code>none</code> depending on the element.</td></tr>
+<tr><td><code>width / height</code></td><td>Explicit box dimensions. Often paired with <code>min()</code>, <code>max()</code> or <code>clamp()</code> to stay responsive.</td></tr>
+<tr><td><code>max-width / min-height</code></td><td>Soft caps. <code>main { max-width: 45rem }</code> is the central content column; <code>.hero-pin { min-height: 100vh }</code> reserves a viewport-height pinning area.</td></tr>
+<tr><td><code>aspect-ratio</code></td><td>Locks width-to-height ratio. The vinyl <code>.disc</code> and the polaroid square images use it.</td></tr>
+<tr><td><code>margin / margin-inline / margin-block</code></td><td>Outer space. Logical-axis variants (<code>-inline</code>, <code>-block</code>) flow with writing direction.</td></tr>
+<tr><td><code>padding / padding-inline / padding-block</code></td><td>Inner space, same logical-axis pattern.</td></tr>
+<tr><td><code>border / border-radius / border-top</code></td><td>Edge decoration; <code>border-radius</code> rounds the portrait corners.</td></tr>
+</table>
+
+<h3>Layout: positioning</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>position</code></td><td><code>static</code> (default), <code>relative</code>, <code>absolute</code>, <code>sticky</code>, <code>fixed</code>. See §5.</td></tr>
+<tr><td><code>top / right / bottom / left</code></td><td>Offsets for non-static positioning.</td></tr>
+<tr><td><code>inset / inset-inline</code></td><td>Shorthand for all four (or two) offsets at once. <code>inset: 0</code> = stretch to all edges.</td></tr>
+<tr><td><code>z-index</code></td><td>Stacking order in a positioned context. The about layers (portrait 1 → veil 2 → camera 3 → text 4) live in the same grid cell, z-index controls who paints on top.</td></tr>
+<tr><td><code>isolation</code></td><td>Forces a new stacking context. Used on <code>.cover</code> to keep its shadows from bleeding into the sleeves grid.</td></tr>
+<tr><td><code>overflow / overflow-x</code></td><td><code>visible</code> (default), <code>hidden</code>, <code>clip</code>, <code>scroll</code>, <code>auto</code>. <code>clip</code> blocks scrolling without making the element a scroll container — important so descendant <code>position: sticky</code> still works.</td></tr>
+</table>
+
+<h3>Layout: flexbox &amp; grid</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>flex-direction</code></td><td><code>row</code> or <code>column</code>. The article pages use <code>flex-direction: column</code> with <code>align-items: center</code> to stack papers and polaroids.</td></tr>
+<tr><td><code>justify-content</code></td><td>Main-axis distribution.</td></tr>
+<tr><td><code>align-items / align-self</code></td><td>Cross-axis alignment per container / per child.</td></tr>
+<tr><td><code>justify-self</code></td><td>Per-item main-axis alignment in a grid cell.</td></tr>
+<tr><td><code>place-items</code></td><td>Shorthand for <code>align-items + justify-items</code>.</td></tr>
+<tr><td><code>gap</code></td><td>Spacing between grid/flex items (replaces ad-hoc margins between children).</td></tr>
+<tr><td><code>grid-template-columns</code></td><td>Defines column tracks. We use <code>1fr 1fr</code> (projects), <code>repeat(auto-fit, minmax(14rem, 1fr))</code> (hero), and a single <code>var(--about-w)</code> track (about).</td></tr>
+<tr><td><code>grid-template-areas</code></td><td>Lets multiple grid items share one named cell. The about portrait/veil/camera/text all declare <code>grid-area: stage</code> so they overlap in the same cell, ordered by z-index.</td></tr>
+<tr><td><code>grid-area</code></td><td>Places an item in a named area.</td></tr>
+<tr><td><code>order</code></td><td>Reorders flex/grid items independently of DOM order. Mobile project layout uses <code>.frame { order: -1 }</code> to pull the TV above the timeline.</td></tr>
+</table>
+
+<h3>Typography</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>font-family</code></td><td>Webfont stack. Custom <code>BBB Karrik</code> + system fallback.</td></tr>
+<tr><td><code>font-size</code></td><td>Often a <code>clamp(MIN, FLEX, MAX)</code> for fluid type that respects a floor and ceiling.</td></tr>
+<tr><td><code>font-weight / font-style</code></td><td>Standard weight/italic switches.</td></tr>
+<tr><td><code>line-height</code></td><td>Leading (vertical rhythm).</td></tr>
+<tr><td><code>letter-spacing</code></td><td>Tracking. The article title uses <code>0.08em</code> for a touch of poster look.</td></tr>
+<tr><td><code>text-align / text-transform</code></td><td>Alignment and uppercase transforms.</td></tr>
+<tr><td><code>text-decoration</code></td><td>Set to <code>none</code> on links globally; we let other styles signal interactivity.</td></tr>
+<tr><td><code>color</code></td><td>Text colour. Driven from <code>--color-fg</code> tokens.</td></tr>
+<tr><td><code>white-space</code></td><td><code>nowrap</code> on the cassette label keeps it on one line.</td></tr>
+<tr><td><code>-webkit-font-smoothing</code></td><td>macOS-only switch for antialiased font rendering.</td></tr>
+<tr><td><code>-webkit-text-size-adjust</code></td><td>Stops mobile Safari auto-scaling text when the user rotates the device.</td></tr>
+</table>
+
+<h3>Colour, fills &amp; backgrounds</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>background</code></td><td>Shorthand for all background sub-properties. Most uses here are <code>linear-gradient(...)</code> for the veils and nav blur.</td></tr>
+<tr><td><code>background-color</code></td><td>Solid fill. Used for the polaroid paper colour <code>#faf7ed</code>.</td></tr>
+<tr><td><code>background-image / -size / -position / -repeat</code></td><td>Used by the vinyl PNGs on music sleeves and the parchment <code>letter_paper.png</code> on article pages.</td></tr>
+<tr><td><code>opacity</code></td><td>Whole-element transparency. The <code>.tv-pic</code> images live at opacity 0 until a hover swap.</td></tr>
+</table>
+
+<h3>Filters &amp; effects</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>filter</code></td><td>SVG-style filter chain. The polaroid images get <code>sepia(0.22) saturate(0.85) contrast(0.94) brightness(1.02)</code> for the faded-print look.</td></tr>
+<tr><td><code>backdrop-filter</code> / <code>-webkit-backdrop-filter</code></td><td>Filters what's behind the element rather than the element itself. The progressive blur stacks on the nav, edge-blur and about veil are all <code>backdrop-filter: blur(var(--b))</code>.</td></tr>
+<tr><td><code>mask-image / -webkit-mask-image</code></td><td>Uses a gradient as a luminance/alpha mask so the blur fades in and out smoothly. Each layer reads its own <code>--t</code>/<code>--e</code> or <code>--m</code> via CSS variables.</td></tr>
+<tr><td><code>clip / clip-path</code></td><td>Geometric clipping. Used on the <code>.visually-hidden</code> screen-reader utility.</td></tr>
+<tr><td><code>box-shadow</code></td><td>Layered shadows on the polaroids and music sleeves give them depth.</td></tr>
+</table>
+
+<h3>Transforms &amp; animation</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>transform</code></td><td>2D/3D transforms. We use <code>translateX(-50%)</code> for centering tricks, <code>rotate()</code> for the polaroid tilt and the article pen flourish.</td></tr>
+<tr><td><code>translate / rotate</code></td><td>Modern individual transform properties. Used in the hero <code>@keyframes drift</code>.</td></tr>
+<tr><td><code>transform-origin</code></td><td>Sets the pivot point for rotation/scale. The pen rotates around its <code>right center</code>.</td></tr>
+<tr><td><code>transition</code></td><td>Tweens declarative property changes (hover states on sleeves, TV picture cross-fades).</td></tr>
+<tr><td><code>animation</code></td><td>Triggers a <code>@keyframes</code> sequence. See §3 for scroll-driven, plus the hero drift, vinyl spin, etc.</td></tr>
+<tr><td><code>animation-name / -duration / -delay / -timing-function / -fill-mode</code></td><td>The longhand controls.</td></tr>
+<tr><td><code>animation-play-state</code></td><td><code>paused</code>/<code>running</code>. The vinyl <code>.disc</code> spin is paused by default and switched to running on hover via <code>:has()</code>.</td></tr>
+<tr><td><code>animation-timeline</code></td><td><strong>Bind an animation to a scroll/view timeline instead of wall-clock time.</strong> See §3.</td></tr>
+<tr><td><code>animation-range</code></td><td>Slice of the timeline an animation occupies. See §3.</td></tr>
+<tr><td><code>view-timeline</code></td><td>Names a timeline that progresses as the element enters and leaves the viewport. See §3.</td></tr>
+<tr><td><code>will-change</code></td><td>Hint to the browser ("I'm about to animate this"). Set on <code>.hero-pic { will-change: translate }</code> so it gets a GPU layer up front.</td></tr>
+</table>
+
+<h3>SVG-specific properties (used in the name animation)</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>stroke-dasharray</code></td><td>Defines the dash pattern along a stroke. Set to <code>1</code> with <code>pathLength="1"</code> = "one dash equal to the whole path length." See §4.</td></tr>
+<tr><td><code>stroke-dashoffset</code></td><td>Pushes the dash pattern along the stroke. Going from <code>1</code> to <code>0</code> reveals the stroke. See §4.</td></tr>
+<tr><td><code>visibility</code></td><td><code>hidden</code> until the animation fires so the path doesn't flash at <code>dashoffset: 1</code>.</td></tr>
+</table>
+
+<h3>Pointer / interaction</h3>
+<table class="prop-table">
+<tr><th>Property</th><th>What it does</th></tr>
+<tr><td><code>cursor</code></td><td>Set globally to <code>pointer</code> for <code>a[href]</code>, buttons and <code>[role="button"]</code> so every clickable thing gets the pointing hand.</td></tr>
+<tr><td><code>pointer-events</code></td><td><code>none</code> lets clicks pass through purely-visual layers (the nav blur, the about camera, the edge-blur).</td></tr>
+<tr><td><code>user-select / -webkit-user-drag</code></td><td>Disable selection / drag on decorative images (portrait, camera, TV frame).</td></tr>
+<tr><td><code>scroll-behavior</code></td><td><code>smooth</code> on <code>html</code> for in-page jumps (clicking About/Projects/Music in the nav).</td></tr>
+<tr><td><code>scroll-margin-top</code></td><td>Offsets scroll-snap landing points. Every <code>section</code> reserves <code>2 × --space</code> so the fixed nav doesn't cover the heading on jump.</td></tr>
+</table>
+
+<!-- ====================================================== -->
+<div class="pagebreak"></div>
+<h2 id="walkthrough">3. <span class="star">★</span> Section-by-section walkthrough</h2>
+<p>The site is one long <code>&lt;main&gt;</code> made of five sections plus a fixed header and a footer. Each section uses a different mix of layout primitives. This section explains, in order, what the HTML looks like and what each piece does.</p>
+
+<h3>3.1 <code>&lt;header class="site-header"&gt;</code> — the fixed nav</h3>
+<pre><code>&lt;header class="site-header"&gt;
+    &lt;div class="nav-blur" aria-hidden="true"&gt;
+        &lt;span style="--b: 2px;  --t: 45%; --e: 100%"&gt;&lt;/span&gt;
+        &lt;span style="--b: 4px;  --t: 38%; --e: 88%"&gt;&lt;/span&gt;
+        &lt;!-- … 4 more progressive layers --&gt;
+    &lt;/div&gt;
+    &lt;nav class="nav"&gt;
+        &lt;a class="brand" href="#top"&gt;antoineview&lt;/a&gt;
+        &lt;ul class="nav-links"&gt;
+            &lt;li&gt;&lt;a href="#about"&gt;About&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#projects"&gt;Projects&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#music"&gt;Music&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+<p>Two children: a decorative <code>.nav-blur</code> backdrop and the real <code>&lt;nav&gt;</code>. The <code>aria-hidden="true"</code> tells screen readers to skip the blur (it's purely visual). The header itself is <code>position: fixed; top: 0; left: 0; right: 0</code> so it stays anchored to the viewport on every scroll. Each blur <code>&lt;span&gt;</code> carries its parameters as inline CSS variables (<code>--b</code>=radius, <code>--t</code>=mask solid-end, <code>--e</code>=mask transparent-end), so one CSS rule renders six different progressive blur layers.</p>
+
+<h3>3.2 <code>&lt;section class="hero" id="top"&gt;</code> — the scroll-driven name</h3>
+<pre><code>&lt;section class="hero" id="top"&gt;
+    &lt;div class="hero-pin"&gt;
+        &lt;div class="hero-imgs" aria-hidden="true"&gt;
+            &lt;img class="hero-pic" src="…/paper-city.jpeg" /&gt;
+            &lt;!-- 7 more drifting pictures --&gt;
+        &lt;/div&gt;
+        &lt;div class="edge-blur" aria-hidden="true"&gt;…&lt;/div&gt;
+        &lt;div class="edge-fade" aria-hidden="true"&gt;&lt;/div&gt;
+        &lt;h1 class="visually-hidden"&gt;antoine&lt;/h1&gt;
+        &lt;svg class="draw-name" viewBox="0 0 854 163"&gt;
+            &lt;path style="--i: 5" pathLength="1" d="…" /&gt;
+            &lt;!-- 23 more path strokes --&gt;
+        &lt;/svg&gt;
+        &lt;p class="scroll-cue"&gt;scroll&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+<p><strong>Two-layer structure.</strong> The outer <code>.hero</code> is the <em>scroll runway</em> — it's 300vh tall when scroll-driven animations are supported, so you can scroll three viewports' worth while looking at it. The inner <code>.hero-pin</code> is <code>position: sticky; top: 0; height: 100vh</code> — it pins to the top of the viewport for the duration of that runway. While the runway is in view, scrolling advances the SVG path animation (see §5) without moving the visible content.</p>
+<p><strong>What lives inside the pin.</strong></p>
+<ul>
+    <li><code>.hero-imgs</code>: the drifting photographs. A CSS grid of images, each running a <code>@keyframes drift</code> animation on a 36-second loop with staggered <code>animation-delay</code>.</li>
+    <li><code>.edge-blur</code> &amp; <code>.edge-fade</code>: progressive blur and a white gradient at the viewport edges, so the drifting photos dissolve into the page background rather than cutting off at a hard rectangle.</li>
+    <li><code>.visually-hidden &lt;h1&gt;</code>: a screen-reader-only "antoine" so the page has a real H1 even though the visible logotype is an SVG.</li>
+    <li><code>.draw-name</code>: the SVG itself — 24 paths drawing each letter stroke. See §5.</li>
+</ul>
+
+<h3>3.3 <code>&lt;section id="about" class="about"&gt;</code> — sticky portrait + scrolling text</h3>
+<pre><code>&lt;section id="about" class="about"&gt;
+    &lt;h2 id="about-heading"&gt;About&lt;/h2&gt;
+    &lt;div class="about-stage"&gt;
+        &lt;img class="about-portrait" src="…/portrait.jpeg" /&gt;
+        &lt;div class="about-veil"&gt;
+            &lt;span class="about-veil-white"&gt;&lt;/span&gt;
+            &lt;span class="about-veil-blur" style="--b: 2px;  --m: 100%"&gt;&lt;/span&gt;
+            &lt;!-- 5 more progressive blur layers --&gt;
+        &lt;/div&gt;
+        &lt;img class="about-camera" src="…/camera.png" /&gt;
+        &lt;div class="about-text"&gt;
+            &lt;p&gt;Hi! I'm Antoine&lt;/p&gt;
+            &lt;!-- more paragraphs --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+<p><strong>The trick: four layers in the same grid cell.</strong></p>
+<pre><code>.about-stage {
+    display: grid;
+    grid-template-columns: var(--about-w);
+    grid-template-areas: "stage";
+    justify-content: center;
+    min-height: 220vh;
+}
+.about-portrait, .about-veil, .about-camera, .about-text {
+    grid-area: stage;      /* all four land in the same cell */
+}</code></pre>
+<p>By declaring a single named area and putting all four elements into it, they overlap. <code>z-index</code> then controls who paints on top: portrait (1) → white veil (2) → camera (3) → text (4).</p>
+<p><strong>The scroll choreography.</strong> The <code>.about-stage</code> is 220vh tall (a long runway). Inside it:</p>
+<ul>
+    <li>The <strong>portrait</strong> is <code>position: sticky; top: 25%</code>. It pins a quarter of the way down the viewport while the stage scrolls past.</li>
+    <li>The <strong>veil</strong> and <strong>camera</strong> are in normal flow (no sticky). They scroll up off-screen as you advance.</li>
+    <li>The <strong>text</strong> is in normal flow too, but with <code>padding-block-start: calc(var(--about-w) + 5vh)</code> so its first paragraph begins below the bottom of the camera. As the text scrolls up past the still-sticky portrait, it reads as a caption track over the trees.</li>
+</ul>
+<p>The white veil hides the portrait <em>until</em> the camera (and the veil with it) has scrolled away. Then the portrait alone is left, with the text scrolling over it.</p>
+<p><strong>Full-bleed.</strong> The <code>.about</code> uses <code>width: 100vw; margin-inline: calc(50% - 50vw)</code> to break out of <code>main { max-width: 45rem }</code> and span the entire viewport — necessary because the camera and portrait want all the horizontal room they can get.</p>
+
+<h3>3.4 <code>&lt;section id="projects" class="projects"&gt;</code> — sticky TV + scrolling timeline</h3>
+<pre><code>&lt;section id="projects" class="projects"&gt;
+    &lt;h2&gt;Currently working on&lt;/h2&gt;
+    &lt;a class="k7-link" href="projects/chrysalide.html"&gt;
+        &lt;div class="k7-full"&gt;
+            &lt;img class="k7-base"   src="…/cassette.png" /&gt;
+            &lt;img class="k7-axis k7-axis-l" src="…/cassette_l.png" /&gt;
+            &lt;img class="k7-axis k7-axis-r" src="…/cassette_r.png" /&gt;
+            &lt;div class="player-front"&gt;…&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/a&gt;
+    &lt;div class="projects-grid"&gt;
+        &lt;ol class="timeline"&gt;
+            &lt;li class="year"&gt;&lt;span class="label"&gt;2026&lt;/span&gt;&lt;/li&gt;
+            &lt;li class="proj" data-project="scc26"&gt;
+                &lt;a class="proj-link" href="projects/scc26.html"&gt;
+                    &lt;span class="k7"&gt;
+                        &lt;img class="k7-img" src="…/k7_green.png" /&gt;
+                        &lt;span class="k7-title"&gt;SCC 26&lt;/span&gt;
+                    &lt;/span&gt;
+                &lt;/a&gt;
+            &lt;/li&gt;
+            &lt;!-- more years and cassettes --&gt;
+        &lt;/ol&gt;
+        &lt;div class="frame"&gt;
+            &lt;div class="frame-veil"&gt;…&lt;/div&gt;
+            &lt;div class="projects-head"&gt;&lt;h2&gt;All Projects&lt;/h2&gt;&lt;/div&gt;
+            &lt;div class="tv"&gt;
+                &lt;img class="tv-frame" src="…/TV_Frame.png" /&gt;
+                &lt;img class="tv-pic" data-for="scc26" src="…/scc26_1.png" /&gt;
+                &lt;!-- one tv-pic per project, all at opacity 0 --&gt;
+                &lt;img class="tv-screen" src="…/TV_Screen.png" /&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+<p><strong>The "Currently working on" cassette.</strong> Wrapped in a single <code>&lt;a&gt;</code> so the whole composite is clickable. Hover effects (lift + drop shadow) are scoped to <code>.k7-full</code>; a <code>:has(.player-front:hover)</code> selector spins the axes only when the cover face is hovered, not the cassette body.</p>
+<p><strong>The timeline + TV.</strong> A two-column grid: <code>&lt;ol class="timeline"&gt;</code> on the left (chronological — that's why it's an ordered list, not an unordered one), <code>.frame</code> on the right containing the TV. The <code>.frame</code> is <code>position: sticky; top: var(--head-top)</code>, so the TV stays parked beneath the nav while you scroll down the cassette list. The <code>.tv-pic</code> images are stacked inside the TV at <code>opacity: 0</code>; on hover of any <code>.proj</code>, a <code>:has()</code> rule sets the matching <code>.tv-pic</code> to opacity 1, cross-fading the TV screen to that project's preview.</p>
+
+<h3>3.5 <code>&lt;section id="music"&gt;</code> — vinyl sleeves</h3>
+<pre><code>&lt;section id="music"&gt;
+    &lt;h2&gt;Music on repeat&lt;/h2&gt;
+    &lt;ul class="sleeves"&gt;
+        &lt;li class="sleeve v-orange"&gt;
+            &lt;span class="disc-slot"&gt;&lt;span class="disc"&gt;&lt;/span&gt;&lt;/span&gt;
+            &lt;span class="cover"&gt;
+                &lt;img class="cover-img" src="…/Mydnight.png" /&gt;
+            &lt;/span&gt;
+            &lt;span class="meta"&gt;&lt;b&gt;Mydnight&lt;/b&gt;&lt;/span&gt;
+        &lt;/li&gt;
+        &lt;!-- one li per album --&gt;
+    &lt;/ul&gt;
+&lt;/section&gt;</code></pre>
+<p>Each <code>.sleeve</code> contains three stacked pieces: an absolutely-positioned <code>.disc-slot</code> (the vinyl record, initially hidden behind the cover), a <code>.cover</code> (the album art), and a <code>.meta</code> caption underneath. On hover the cover translates downward, the disc slides out and spins via <code>@keyframes spin</code>. Each <code>.sleeve</code> carries a colour modifier class (<code>v-orange</code>, <code>v-black</code>, etc.) that swaps in a different vinyl PNG. The <code>.sleeves</code> container uses <code>grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr))</code> so the grid re-flows naturally with viewport width.</p>
+
+<h3>3.6 <code>&lt;footer class="site-footer"&gt;</code></h3>
+<p>Just a thin closing band with copyright text. <code>border-top: 1px solid #eee</code>, muted colour, centred.</p>
+
+<h3>3.7 Project article pages (e.g. <code>projects/scc26.html</code>)</h3>
+<pre><code>&lt;main class="article"&gt;
+    &lt;h1 class="article-title"&gt;SCC 26&lt;/h1&gt;
+    &lt;article class="paper"&gt;
+        &lt;p&gt;…&lt;/p&gt;
+        &lt;p&gt;…&lt;/p&gt;
+    &lt;/article&gt;
+    &lt;figure class="polaroid polaroid--l"&gt;
+        &lt;img src="…/scc26_1.png" /&gt;
+        &lt;figcaption&gt;dashboard, the landing page&lt;/figcaption&gt;
+    &lt;/figure&gt;
+    &lt;!-- more paper + polaroid pairs --&gt;
+    &lt;article class="paper paper--last"&gt;
+        &lt;p&gt;…&lt;/p&gt;
+        &lt;img class="pen" src="…/md_pen.png" /&gt;
+    &lt;/article&gt;
+&lt;/main&gt;</code></pre>
+<p>Article pages use a different stylesheet (<code>article.css</code>) layered on top of the shared <code>style.css</code>. The layout is a vertical stack of <code>&lt;article class="paper"&gt;</code> sheets (textured paper background, two-column rule decoration) interleaved with <code>&lt;figure class="polaroid"&gt;</code> photographs that are rotated slightly (alternating <code>--l</code>/<code>--r</code> tilts) and hang over the previous paper via <code>margin-top: -11rem</code>. The final article carries a <code>.paper--last</code> modifier with a hand-drawn pen flourish (<code>.pen</code>) signing off the page.</p>
+<p>Each <code>&lt;figure&gt; + &lt;figcaption&gt;</code> pair is a single semantic unit — the caption is bound to the image, which matters for screen readers.</p>
+
+<!-- ====================================================== -->
+<div class="pagebreak"></div>
+<h2 id="scroll-timeline">4. <span class="star">★</span> Scroll-driven animations</h2>
+<p class="note">Used in: §3.2 (hero name draws as you scroll). Declares a timeline channel on §3.3 (about) for downstream effects.</p>
+<p>The hero name draws itself as you scroll, and the about section advertises a timeline downstream effects can hook into. Both use the brand-new <em>Scroll-driven Animations</em> spec, which connects a regular <code>@keyframes</code> animation to scroll progress instead of wall-clock time.</p>
+
+<h3>The three pieces</h3>
+<ul>
+    <li><code>view-timeline: --name block</code> — declares that <em>this element</em> exposes a timeline named <code>--name</code> that advances from <code>0</code> when the element first enters the viewport to <code>1</code> when it has just left, measured along the block axis (vertical for default writing modes).</li>
+    <li><code>animation-timeline: --name</code> — binds an animation to that timeline. Progress through the keyframes now follows scroll progress, not seconds.</li>
+    <li><code>animation-range: contain X% contain Y%</code> — restricts which slice of the timeline the animation occupies. <code>contain</code> means "the element is fully contained in the viewport," so <code>contain 0% contain 100%</code> runs the animation only while the element is fully on screen.</li>
+</ul>
+
+<h3>The hero name, in detail</h3>
+<pre><code>/* Outer: 300vh-tall scroll runway exposes a timeline */
+@supports (animation-timeline: view()) {
+    .hero {
+        height: 300vh;
+        view-timeline: --hero block;
+    }
+
+    .hero-pin {
+        position: sticky; top: 0; height: 100vh;
+    }
+
+    /* Each letter stroke binds to the same timeline */
+    .draw-name path {
+        animation-name: draw-stroke;
+        animation-timeline: --hero;
+        animation-duration: auto;           /* duration is the timeline */
+        animation-delay: 0s;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        /* And each stroke gets its own 1/24 slice */
+        animation-range:
+            contain calc((var(--i) - 1) / 24 * 100%)
+            contain calc((var(--i))     / 24 * 100%);
+    }
+}</code></pre>
+
+<p>The strokes are numbered 1–24 via an inline CSS variable <code>--i</code> on each <code>&lt;path&gt;</code>. Each stroke draws across its own equal 1/24 slice of the contain phase, so by the time the section has fully scrolled past, every letter has appeared in order.</p>
+
+<h4>Fallback for browsers without scroll-timeline</h4>
+<p>Outside the <code>@supports</code> block, the same keyframes run on a normal time-based animation with a per-stroke <code>animation-delay: calc((var(--i) - 1) * 170ms)</code>. Same visual result, just untethered from scroll. This is graceful degradation: the modern path is opt-in via feature query.</p>
+
+<h3>The about timeline</h3>
+<pre><code>.about {
+    view-timeline: --about block;
+}</code></pre>
+<p>The about section declares a timeline named <code>--about</code> so future scroll-driven effects (e.g. crossfading the portrait, advancing parallax) can attach by name without re-measuring scroll position from JavaScript.</p>
+
+<div class="deep-dive">
+<h3>Mental model</h3>
+<p>Think of <code>view-timeline</code> as the element <em>publishing</em> its own progress as a 0→1 channel that anyone in the cascade can subscribe to. <code>animation-timeline</code> is the subscription. <code>animation-range</code> is a window filter on that subscription. The keyframes themselves don't change — they just play to a different clock.</p>
+<p>This replaces a category of JavaScript that used to listen on <code>scroll</code>, compute positions, and write transforms every frame. It's declarative, off the main thread, and respects <code>prefers-reduced-motion</code>.</p>
+</div>
+
+<!-- ====================================================== -->
+<h2 id="svg-anim">5. <span class="star">★</span> SVG path animation</h2>
+<p>Each letter in the SVG name draws itself stroke-by-stroke. The technique combines three SVG/CSS features.</p>
+
+<h3>1. <code>pathLength</code></h3>
+<p>Without <code>pathLength</code>, the dash pattern is in <em>user units</em> — so a long stroke and a short stroke would need different dash values to look the same. Setting <code>pathLength="1"</code> on the <code>&lt;path&gt;</code> tells the browser "pretend this path has length 1," normalising every stroke to the same length regardless of its actual geometry.</p>
+
+<h3>2. <code>stroke-dasharray</code> and <code>stroke-dashoffset</code></h3>
+<p>A stroke can be drawn as a dashed line by setting <code>stroke-dasharray</code>. With <code>pathLength="1"</code> + <code>stroke-dasharray: 1</code>, you've drawn one dash exactly the length of the whole path: a single, solid line.</p>
+<p><code>stroke-dashoffset</code> shifts where that dash starts. At offset <code>1</code> (= one whole path length away), the dash is entirely off the end → invisible. At offset <code>0</code>, it's perfectly aligned → fully visible.</p>
+
+<pre><code>.draw-name path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;    /* hidden */
+    visibility: hidden;
+    animation: draw-stroke 170ms linear forwards;
+}
+
+@keyframes draw-stroke {
+    0%   { stroke-dashoffset: 1; visibility: hidden;  }
+    100% { stroke-dashoffset: 0; visibility: visible; }
+}</code></pre>
+
+<h3>3. Ordering with a custom property</h3>
+<p>Each <code>&lt;path&gt;</code> is tagged inline with <code>style="--i: 8"</code> (1–24, the writing order). The CSS then derives both:</p>
+<ul>
+    <li><strong>The fallback delay:</strong> <code>animation-delay: calc((var(--i) - 1) * 170ms)</code> — letter <code>--i</code> waits its turn.</li>
+    <li><strong>The scroll-timeline range:</strong> <code>animation-range: contain calc((--i - 1)/24 * 100%) contain calc(--i/24 * 100%)</code> — letter <code>--i</code> occupies its slice of the scroll runway.</li>
+</ul>
+
+<div class="deep-dive">
+<h3>Why <code>visibility: hidden</code> at the start?</h3>
+<p>Subpixel anti-aliasing can leak a faint sliver of the stroke even at <code>dashoffset: 1</code>. Toggling <code>visibility</code> through the keyframes guarantees a clean start: nothing renders until the first frame where the dashoffset is meaningfully less than 1.</p>
+</div>
+
+<!-- ====================================================== -->
+<h2 id="sticky">6. <span class="star">★</span> Sticky &amp; fixed positioning</h2>
+<p>"Sticky" is the most useful and most misunderstood positioning value in CSS. It's the engine behind every scroll choreography in this site, so it gets a deep dive.</p>
+
+<h3>The mental model</h3>
+<p>A sticky element behaves like <code>position: relative</code> <em>most</em> of the time. It flows with the document, takes up its natural space, and scrolls along with its parent. <strong>But</strong> when the scroll position would cause the element to leave the viewport on its <em>nearest scrolling ancestor</em>, the browser switches it to behave like <code>position: fixed</code> at the offset you specified (e.g. <code>top: 0</code>). The element appears to "stick" to that offset.</p>
+<p>The pin lasts only as long as the element's <em>containing block</em> (its nearest ancestor with a layout role) is still visible. Once the bottom of the containing block scrolls past the sticky offset, the element un-pins and scrolls away with its parent.</p>
+
+<h3>The three required ingredients</h3>
+<ol>
+    <li><strong>An offset.</strong> You must declare at least one of <code>top</code>, <code>bottom</code>, <code>left</code>, <code>right</code>. Without one, sticky silently degrades to <code>position: relative</code> and nothing happens.</li>
+    <li><strong>A parent taller than the sticky element.</strong> The parent needs scroll headroom for the element to stick within. If parent and child are the same height, they leave the viewport together — no sticking ever happens.</li>
+    <li><strong>No scroll-blocking ancestor.</strong> Any ancestor with <code>overflow: hidden</code>, <code>overflow: auto</code>, or <code>overflow: scroll</code> becomes the new scrolling root for the sticky. If that ancestor doesn't itself scroll, the sticky inside it can't either.</li>
+</ol>
+
+<h3>A timeline of one sticky element</h3>
+<pre><code>Time →
+═══════════════════════════════════════════════════════════════
+viewport top:  ─────────────────────────────────────────
+parent:           ┌──────────────┐
+                  │              │   ┌── parent (tall) ──┐
+sticky child:     │  ░░░░░░░░░░  │   │                   │
+                  │              │   │ ░░ STICKY ░░ ←───── pinned at top: X
+                  │              │   │                   │
+                  └──────────────┘   │                   │
+                                     │                   │
+                  scroll ↓           │                   │
+                                     └───────────────────┘
+
+   Phase 1               Phase 2                  Phase 3
+   parent above           sticky reaches            parent bottom
+   viewport's             the top: X offset,        passes top: X,
+   top: X line,           pins to viewport.         sticky un-pins
+   sticky behaves         Lasts until phase 3.      and scrolls off.
+   like relative.</code></pre>
+
+<h3>The three sticky uses in this site</h3>
+
+<h4>1. The hero pin — pinning the whole hero for 300vh of scroll</h4>
+<pre><code>.hero      { height: 300vh; view-timeline: --hero block; }
+.hero-pin  { position: sticky; top: 0; height: 100vh; }</code></pre>
+<p>The outer <code>.hero</code> is 300vh tall — it gives you three viewports' worth of scroll room. The inner <code>.hero-pin</code> is 100vh tall (one viewport) and <code>position: sticky; top: 0</code>. The result: as you scroll the 300vh runway, the inner pin stays glued to the top of the viewport. Visually nothing moves, but you're advancing through scroll progress. The scroll-driven SVG animation uses that progress to draw the name (see §4–5).</p>
+
+<h4>2. The projects TV — pinning a side panel while the timeline scrolls past</h4>
+<pre><code>.projects-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+.frame         { position: sticky; top: var(--head-top); }</code></pre>
+<p>A two-column grid: timeline on the left, TV on the right. The TV's container (<code>.frame</code>) sticks to <code>top: var(--head-top)</code> (5rem, leaving room for the fixed nav). As long as the parent <code>.projects-grid</code> is on screen, the TV stays parked at that offset while the timeline column scrolls past it. Hovering a cassette in the timeline triggers a <code>:has()</code> rule that swaps the visible <code>.tv-pic</code> inside the still-sticky TV.</p>
+<p><strong>Why <code>align-items: start</code>?</strong> The default grid alignment is <code>stretch</code>, which would make the <code>.frame</code> grow to the timeline's height. A stretched sticky has no scroll headroom (it fills its row exactly) and can't pin. <code>align-items: start</code> lets each column be its natural height.</p>
+
+<h4>3. The about portrait — pinning behind scrolling text and layered images</h4>
+<pre><code>.about-stage    { min-height: 220vh; }
+.about-portrait { position: sticky; top: 25%; }</code></pre>
+<p>The portrait sits in the same grid cell as the white veil, the camera and the text. It's <code>position: sticky; top: 25%</code> — pinning a quarter of the viewport down from the top. The runway is 220vh tall, so as you scroll:</p>
+<ol>
+    <li>For the first stretch, the portrait flows with the runway alongside the camera and veil.</li>
+    <li>Once the portrait's natural position reaches 25% from the top, it pins.</li>
+    <li>The veil and camera (not sticky) keep scrolling up and disappear off the top of the viewport.</li>
+    <li>The text (not sticky) scrolls up across the now-uncovered, still-pinned portrait — reading like captions over the trees.</li>
+    <li>Eventually the bottom of <code>.about-stage</code> hits 25% from the top, the portrait un-pins, and the whole section scrolls away.</li>
+</ol>
+
+<h3>Sticky uses in this project</h3>
+<h4>1. The hero pin (<code>.hero-pin</code>)</h4>
+<p><code>position: sticky; top: 0; height: 100vh</code> inside a <code>.hero { height: 300vh }</code> runway. As you scroll the 300vh section, the inner 100vh content "sticks" to the top of the viewport for the duration. This is what gives the scroll-driven SVG animation room to play: you can scroll 300vh while looking at the same fixed-feeling hero, and the scroll progress drives the path reveals.</p>
+
+<h4>2. The TV in the projects grid (<code>.frame</code>)</h4>
+<p><code>position: sticky; top: var(--head-top)</code> — the TV stays parked under the nav while the timeline of cassette items scrolls past it. On hover of any timeline item, the corresponding <code>.tv-pic</code> swaps in via opacity transition.</p>
+
+<h4>3. The about portrait (<code>.about-portrait</code>)</h4>
+<p><code>position: sticky; top: 25%</code> inside a 220vh-tall <code>.about-stage</code>. The portrait pins a quarter of the way down the viewport as the white veil/camera/text layers scroll over it.</p>
+
+<h3><code>position: fixed</code></h3>
+<p>Only one element on the site uses it: <code>.site-header</code> (<code>left: 0; right: 0</code> so it spans exactly the viewport regardless of scroll). Unlike sticky, fixed ignores its containing block and pins to the viewport itself.</p>
+
+<div class="deep-dive">
+<h3>Common sticky gotchas</h3>
+<ul>
+    <li><strong>An ancestor with <code>overflow: hidden</code></strong> kills sticky in browsers that treat it as a new scroll container. <code>overflow: clip</code> doesn't — that's why we use <code>clip</code> on <code>&lt;html&gt;</code> and <code>&lt;body&gt;</code>: it suppresses horizontal scroll without breaking sticky descendants.</li>
+    <li><strong>A flex/grid ancestor with <code>align-items: stretch</code></strong> can make the sticky's container shrink to fit the sticky, so it never has room to "stick." Use <code>align-items: start</code> on the parent grid (which is what <code>.about-stage</code> does for the portrait/camera/veil layers).</li>
+    <li><strong>Sticky doesn't work without a real <code>top</code> (or <code>bottom</code>/<code>left</code>/<code>right</code>)</strong> — without one, it falls back to <code>position: relative</code>.</li>
+</ul>
+</div>
+
+<!-- ====================================================== -->
+<h2 id="at-rules">7. At-rules</h2>
+
+<h3><code>@font-face</code></h3>
+<pre><code>@font-face {
+    font-family: "BBB Karrik";
+    src: url("../fonts/BBB_Karrik.woff2") format("woff2"),
+         url("../fonts/BBB_Karrik.woff")  format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}</code></pre>
+<p>Registers a custom font. <code>font-display: swap</code> tells the browser "show fallback text immediately, swap the real font in once it loads." Combined with <code>&lt;link rel="preload" as="font" crossorigin&gt;</code> in the document head, the font is requested at the same time as the HTML and arrives before first paint.</p>
+
+<h3><code>@keyframes</code></h3>
+<pre><code>@keyframes drift {
+    0%, 100% { translate: 26vw 0vh; }
+    25%      { translate: 0     18vh; }
+    50%      { translate: -26vw 0vh; }
+    75%      { translate: 0    -18vh; }
+}</code></pre>
+<p>Defines named animation timelines. Then any element binds with <code>animation: drift 36s linear infinite</code>. We use keyframes for the hero drift, the vinyl spin, the SVG draw-stroke and a few others.</p>
+
+<h3><code>@media</code></h3>
+<p>Conditional rule blocks. Three breakpoints in this site:</p>
+<ul>
+    <li><code>@media (max-width: 40em)</code> — phones (≤640px). Single-column projects grid, mobile-only TV veil, condensed timeline, smaller about composition.</li>
+    <li><code>@media (min-width: 40.0625em) and (max-width: 64em)</code> — small tablets (~641–1024px). In-between about sizing, narrower hero images grid.</li>
+    <li><code>@media (prefers-reduced-motion: reduce)</code> — disables the hero drift, the SVG draw-stroke (just shows the final state), the vinyl spin, etc. Accessibility default.</li>
+</ul>
+
+<h3><code>@supports</code></h3>
+<pre><code>@supports (animation-timeline: view()) {
+    /* modern, scroll-driven path */
+}</code></pre>
+<p>Feature query. Only applies the enclosed rules if the browser actually understands the property/value combination. Lets us layer the scroll-driven version on top of a time-based fallback without a JavaScript detect.</p>
+
+<!-- ====================================================== -->
+<h2 id="patterns">8. Recurring techniques</h2>
+
+<h3>Custom properties as a parameter API</h3>
+<p>Inline <code>style="--b: 16px; --t: 48%; --e: 68%"</code> on each blur span lets one CSS rule render six layered backdrop-filters with different radii and fade points, without any JS. Same idea on the SVG paths (<code>--i: 8</code> indexes a stroke into the animation sequence) and the about token (<code>--about-w</code> drives camera width, portrait width, veil height and text padding all at once).</p>
+
+<h3>Full-bleed inside a constrained <code>&lt;main&gt;</code></h3>
+<pre><code>.about {
+    width: 100vw;
+    margin-left:  calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}</code></pre>
+<p>Breaks an element out of <code>main { max-width: 45rem }</code> to the full viewport width, recentered. Combined with <code>html, body { overflow-x: clip }</code> to prevent the resulting overflow from triggering horizontal scroll.</p>
+
+<h3>Layered grid cell + z-index</h3>
+<p>The about composition stacks portrait, white veil, camera and text in the same grid cell via <code>grid-area: stage</code> on all four, then uses <code>z-index</code> to control paint order. No absolute positioning needed.</p>
+
+<h3>Progressive backdrop-blur</h3>
+<p>Six <code>&lt;span&gt;</code> layers each with <code>backdrop-filter: blur(var(--b))</code> at radii <code>2, 4, 8, 16, 28, 44 px</code>, each masked by its own linear-gradient. The sum is a smooth blur ramp rather than a single hard-edged blur boundary. Used in the navbar, hero edge fade, and about veil.</p>
+
+<h3><code>:has()</code> for parent-aware hover</h3>
+<p><code>.k7-link:has(.player-front:hover) .k7-axis { animation-play-state: running }</code> — when the cover is hovered, spin the cassette axes; when only the cassette body is hovered, don't. The <code>:has()</code> selector lets a parent rule react to a descendant's state without JavaScript.</p>
+
+<h3>Mobile-only DOM repurposing via <code>order</code></h3>
+<p>Same DOM order across all devices. On mobile, <code>.frame { order: -1 }</code> pulls the TV above the timeline; combined with <code>display: grid; grid-template-columns: 1fr</code> the layout reads top-to-bottom in a sensible way without restructuring the markup.</p>
+
+</body>
+</html>

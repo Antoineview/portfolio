@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SCC 26 - antoineview</title>
+        <meta name="description" content="Project notes on SCC 26." />
+        <link
+            rel="preload"
+            href="../fonts/BBB_Karrik.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="../fonts/Garabosse-Gaillarde.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/article.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="nav-blur" aria-hidden="true">
+                <span style="--b: 2px; --t: 45%; --e: 100%"></span>
+                <span style="--b: 4px; --t: 38%; --e: 88%"></span>
+                <span style="--b: 8px; --t: 64%; --e: 84%"></span>
+                <span style="--b: 16px; --t: 48%; --e: 68%"></span>
+                <span style="--b: 28px; --t: 32%; --e: 52%"></span>
+                <span style="--b: 44px; --t: 16%; --e: 36%"></span>
+            </div>
+            <nav class="nav">
+                <a class="brand" href="../index.html">antoineview</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#music">Music</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="article">
+            <h1 class="article-title">SCC 26</h1>
+
+            <article class="paper">
+                <p>
+                    The goal: organise your day around your medication instead
+                    of being at the mercy of it.
+                </p>
+                <p>
+                    How? By building an AI on top of Apple's Foundation Models
+                    framework. For every task you hand it, the model estimates
+                    how much energy that task will demand and slots it into the
+                    window where the methylphenidate is at its most useful
+                    effect.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/scc26_1.png"
+                    alt="SCC 26 home dashboard. Hello Antoine, streak, today's medication curve"
+                />
+                <figcaption>your day, organised around the dose</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    When a task kicks off, an ADHD-specific timer (yes, this is
+                    being written by someone with ADHD) takes over and lets you
+                    focus fully on the goal at hand.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--r">
+                <img
+                    src="../public/illustrations/articles/scc26_2.png"
+                    alt="SCC 26 focus entry screen. What do you need to focus on?"
+                />
+                <figcaption>name a task, start a session</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    The curve: drawing on mathematical estimates from multiple
+                    methylphenidate studies, I approximated the medication's
+                    effect as a curve that begins the moment you tell the app
+                    you took your dose.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/scc26_3.png"
+                    alt="SCC 26 effect timeline graph. Your Brain Today, kicking in at 18%"
+                />
+                <figcaption>your brain, hour by hour</figcaption>
+            </figure>
+
+            <article class="paper paper--last">
+                <p>Submitted to Apple's Swift Student Challenge 2026.</p>
+                <img
+                    class="pen"
+                    src="../public/illustrations/md_pen.png"
+                    alt="Pen sketch flourish signing off the page"
+                />
+            </article>
+        </main>
+    </body>
+</html>

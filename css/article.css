@@ -1,0 +1,135 @@
+@font-face {
+    font-family: "Garabosse";
+    src:
+        url("../fonts/Garabosse-Gaillarde.woff2") format("woff2"),
+        url("../fonts/Garabosse-Gaillarde.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ---- Article layout ---- */
+.article {
+    max-width: none;
+    padding-top: calc(var(--space) * 6);
+    padding-bottom: calc(var(--space) * 4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--space) * 1.5);
+}
+
+.article-title {
+    font-family: var(--font-sans);
+    color: var(--color-fg);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: var(--space);
+}
+
+/* ---- Paper sheet ---- */
+.paper {
+    --paper-w: min(56rem, 92vw);
+    --paper-h: calc(var(--paper-w) * 1208 / 1516);
+    --line-gap: calc(var(--paper-h) * 0.0596);
+    --baseline-frac: 0.8;
+    --pad-top: calc(
+        var(--paper-h) * 0.16556 - var(--line-gap) * var(--baseline-frac)
+    );
+    --pad-bottom: calc(var(--paper-h) * 0.18);
+    --pad-left: calc(var(--paper-w) * 0.1827);
+    --pad-right: calc(var(--paper-w) * 0.1234);
+
+    /* ---------------------------------------------------------- */
+
+    position: relative;
+    width: var(--paper-w);
+    height: var(--paper-h);
+    overflow: hidden;
+    background-image: url("../public/illustrations/letter_paper.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding: var(--pad-top) var(--pad-right) var(--pad-bottom) var(--pad-left);
+    font-family: "Garabosse", "BBB Karrik", serif;
+    font-size: calc(var(--line-gap) * 0.6);
+    line-height: var(--line-gap);
+    color: #28336b;
+}
+
+.paper p,
+.paper h1,
+.paper h2 {
+    margin: 0;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+/* Inter-paragraph gap */
+.paper p + p {
+    margin-top: var(--line-gap);
+}
+
+/* ---- Signed-off pen ---- */
+.paper .pen {
+    width: 55%;
+    height: auto;
+    margin-top: calc(var(--line-gap) * 2);
+    margin-left: auto;
+    /* Slight pencil tilt for the doodle vibe. */
+    transform: rotate(-3deg);
+    transform-origin: right center;
+}
+
+/* ---- Polaroid photos ---- */
+.polaroid {
+    background: #faf7ed;
+    padding: 0.7rem 0.7rem 2.6rem 0.7rem;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.08),
+        0 8px 22px rgba(0, 0, 0, 0.18),
+        0 16px 40px rgba(0, 0, 0, 0.12);
+    width: min(18rem, 70vw);
+    border-radius: 2px;
+    margin-top: -11rem;
+    position: relative;
+    z-index: 5;
+}
+/* rotation variants */
+.polaroid--l {
+    transform: rotate(-3.5deg);
+    align-self: flex-start;
+    margin-left: clamp(1rem, 8vw, 6rem);
+}
+.polaroid--r {
+    transform: rotate(2.8deg);
+    align-self: flex-end;
+    margin-right: clamp(1rem, 8vw, 6rem);
+}
+.polaroid img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    background: #1a1a1a;
+    filter: sepia(0.22) saturate(0.85) contrast(0.94) brightness(1.02);
+}
+.polaroid figcaption {
+    margin-top: 0.65rem;
+    font-family: "Garabosse", serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    text-align: center;
+    color: #3a3a3a;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 40em) {
+    .paper {
+        --paper-w: 130vw;
+        transform: translateX(calc(var(--paper-w) * -0.03));
+    }
+}

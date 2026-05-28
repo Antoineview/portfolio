@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CoupeCoupe - antoineview</title>
+        <meta name="description" content="Project notes on CoupeCoupe." />
+        <!-- Preload both webfonts so the navbar (Karrik) and the article
+             body (Garabosse) paint without FOUT. -->
+        <link
+            rel="preload"
+            href="../fonts/BBB_Karrik.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="../fonts/Garabosse-Gaillarde.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/article.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="nav-blur" aria-hidden="true">
+                <span style="--b: 2px; --t: 45%; --e: 100%"></span>
+                <span style="--b: 4px; --t: 38%; --e: 88%"></span>
+                <span style="--b: 8px; --t: 64%; --e: 84%"></span>
+                <span style="--b: 16px; --t: 48%; --e: 68%"></span>
+                <span style="--b: 28px; --t: 32%; --e: 52%"></span>
+                <span style="--b: 44px; --t: 16%; --e: 36%"></span>
+            </div>
+            <nav class="nav">
+                <a class="brand" href="../index.html">antoineview</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#music">Music</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="article">
+            <h1 class="article-title">CoupeCoupe</h1>
+
+            <article class="paper">
+                <p>
+                    CoupeCoupe is Fruit Ninja in space, rebuilt as an
+                    augmented-reality game on iPhone. You lift the phone, look
+                    around, and asteroids drift past your living room. A swipe
+                    cuts them in half.
+                </p>
+                <p>
+                    The game is built in Unity with ARKit. The room becomes the
+                    arena, and the depth of the play space is real, not faked.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/coupe_1.png"
+                    alt="CoupeCoupe in play, an asteroid drifting through an augmented-reality room"
+                />
+                <figcaption>asteroids in the living room</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    The whole project is about pushing every iPhone capability
+                    we could find. The gyroscope steers the camera, the LiDAR
+                    sensor on supported devices anchors objects against real
+                    surfaces, the haptic engine fires on every successful slice.
+                </p>
+                <p>
+                    The UX and UI follow the same idea. Menus float in 3D space,
+                    buttons respond to gaze and proximity.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--r">
+                <img
+                    src="../public/illustrations/articles/coupe_2.png"
+                    alt="CoupeCoupe HUD and menu in augmented reality, floating in the room"
+                />
+                <figcaption>HUD and menus, in your room</figcaption>
+            </figure>
+
+            <article class="paper paper--last">
+                <p>
+                    It started as a small experiment and turned into a proper
+                    proof of how far you can take a casual mechanic when the
+                    whole device, screen, sensors, haptics, sound, all pulls in
+                    the same direction.
+                </p>
+                <img
+                    class="pen"
+                    src="../public/illustrations/md_pen.png"
+                    alt="Pen sketch flourish signing off the page"
+                />
+            </article>
+        </main>
+    </body>
+</html>

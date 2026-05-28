@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CiaOCR - antoineview</title>
+        <meta name="description" content="Project notes on CiaOCR." />
+        <!-- Preload both webfonts so the navbar (Karrik) and the article
+             body (Garabosse) paint without FOUT. -->
+        <link
+            rel="preload"
+            href="../fonts/BBB_Karrik.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="../fonts/Garabosse-Gaillarde.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/article.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="nav-blur" aria-hidden="true">
+                <span style="--b: 2px; --t: 45%; --e: 100%"></span>
+                <span style="--b: 4px; --t: 38%; --e: 88%"></span>
+                <span style="--b: 8px; --t: 64%; --e: 84%"></span>
+                <span style="--b: 16px; --t: 48%; --e: 68%"></span>
+                <span style="--b: 28px; --t: 32%; --e: 52%"></span>
+                <span style="--b: 44px; --t: 16%; --e: 36%"></span>
+            </div>
+            <nav class="nav">
+                <a class="brand" href="../index.html">antoineview</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#music">Music</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="article">
+            <h1 class="article-title">CiaOCR</h1>
+
+            <article class="paper">
+                <p>
+                    CiaOCR is a word-search solver built from scratch. You hand
+                    it a photo of a puzzle, it cleans the image, reads the grid,
+                    finds every listed word and draws the solution back onto the
+                    page.
+                </p>
+                <p>
+                    No third-party OCR engine. The whole pipeline, skew
+                    correction, segmentation, character recognition and solving,
+                    was written by hand.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/ciaocr_1.webp"
+                    alt="The original photo of the puzzle, faded and visibly skewed"
+                />
+                <figcaption>the input, straight off a phone</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    First step: straightening the page. The algorithm runs
+                    simulated rotations from -30° to 30° and picks the angle
+                    that maximises the variance of horizontal projection
+                    profiles, the orientation that lines the text rows up best.
+                    ImageMagick applies the rotation, a median filter scrubs
+                    digital noise without eating the letter edges.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--r">
+                <img
+                    src="../public/illustrations/articles/ciaocr_2.webp"
+                    alt="Segmentation pass: bounding boxes around every detected character in the grid and the word list"
+                />
+                <figcaption>segmentation, character by character</figcaption>
+            </figure>
+
+            <article class="paper">
+                <p>
+                    Each character is isolated with a connected- component flood
+                    fill, which spits out a bounding box per glyph. Touching
+                    letters are the tricky case: when a box comes out abnormally
+                    wide, a second pass looks for vertical density minima inside
+                    it and surgically splits the merged characters apart.
+                </p>
+            </article>
+
+            <figure class="polaroid polaroid--l">
+                <img
+                    src="../public/illustrations/articles/ciaocr_3.png"
+                    alt="Final result: every word in the list highlighted on the original puzzle"
+                />
+                <figcaption>solution, drawn back on the original</figcaption>
+            </figure>
+
+            <article class="paper paper--last">
+                <p>
+                    A neural network then turns each glyph's pixels into letter
+                    probabilities. The grid gets rebuilt cell by cell, and the
+                    solver scans it in all directions to locate each word from
+                    the list.
+                </p>
+                <p>
+                    Last step: drawing the answers. Once the words are located
+                    on the virtual grid, CiaOCR walks backwards through the
+                    geometric metadata it kept around (where each cell sits in
+                    the original photo, what rotation was applied) and draws the
+                    coloured boxes straight onto the input image.
+                </p>
+                <img
+                    class="pen"
+                    src="../public/illustrations/md_pen.png"
+                    alt="Pen sketch flourish signing off the page"
+                />
+            </article>
+        </main>
+    </body>
+</html>

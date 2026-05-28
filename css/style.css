@@ -1,0 +1,1118 @@
+/* ---- Fonts ---- */
+@font-face {
+    font-family: "BBB Karrik";
+    src:
+        url("../fonts/BBB_Karrik.woff2") format("woff2"),
+        url("../fonts/BBB_Karrik.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ---- Cancel the default styles... ---- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* `clip` doesn't make the element a scroll container (so
+       position: sticky inside still works); `hidden` is the broader-
+       compatibility fallback for older browsers that don't honour
+       `clip`. The cascade picks whichever the engine supports last. */
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+img,
+picture,
+svg,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Any clickable thing (links, buttons, ARIA buttons) shows the pointing-
+   hand cursor — and so does every descendant of a link, so cards wrapping
+   imgs/blocks in <a> don't fall back to the default arrow on inner pixels. */
+a[href],
+a[href] *,
+button,
+[role="button"] {
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ---- Tokens ---- */
+:root {
+    --color-bg: #ffffff;
+    --color-fg: #111111;
+    --color-muted: #666666;
+    --color-accent: #2563eb;
+
+    --font-sans:
+        "BBB Karrik", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+
+    --space: 1rem;
+    --max-width: 45rem; /* 720px ~ */
+}
+
+/* ---- Base ---- */
+body {
+    font-family: var(--font-sans);
+    color: var(--color-fg);
+    background: var(--color-bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    overflow-x: clip;
+    /* Belt: pin the body to exactly the viewport width so even an
+       element with width: 100vw + a vertical scrollbar (where
+       100vw > content-width) can't widen the body. */
+    width: 100%;
+    max-width: 100vw;
+}
+
+main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--space);
+}
+
+section {
+    padding-block: calc(var(--space) * 2);
+    scroll-margin-top: calc(var(--space) * 2);
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+}
+
+h2 {
+    /* Match the Projects/Working heading scale (was 1.5rem). */
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    margin-bottom: var(--space);
+}
+
+/* ---- Header ---- */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+}
+
+.nav-blur {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(100% + 2.5rem);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.nav-blur span {
+    position: absolute;
+    inset: 0;
+    display: block;
+    -webkit-backdrop-filter: blur(var(--b));
+    backdrop-filter: blur(var(--b));
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 var(--t),
+        transparent var(--e)
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 var(--t),
+        transparent var(--e)
+    );
+}
+
+.nav-blur::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.45) 45%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+.nav {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--space);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    gap: calc(var(--space) * 1.5);
+}
+
+.nav-links a:hover {
+    color: var(--color-accent);
+}
+
+/* ---- Hero ---- */
+.hero {
+    min-height: 100vh;
+    padding-block: 0;
+}
+
+.hero-pin {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--space) * 2);
+}
+
+/* Wraps the SVG name above the drifting hero images. */
+.draw-name {
+    position: relative;
+    z-index: 1;
+    width: min(60vw, 32.5rem);
+    height: auto;
+    overflow: visible;
+}
+
+.scroll-cue {
+    position: relative;
+    z-index: 1;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* Floating hero images. */
+.hero-imgs {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    z-index: 0;
+    pointer-events: none;
+
+    overflow: hidden;
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    place-items: center;
+    padding: 4rem 2rem;
+    gap: 2rem;
+}
+.hero-pic {
+    /* Override the global img{max-width:100%} */
+    max-width: none;
+    width: clamp(12rem, 24vw, 22rem);
+    height: auto;
+    /*  constant speed !!! */
+    animation: drift 36s linear infinite;
+    will-change: translate;
+}
+/* Staggered animation on a 36s loop */
+.hero-pic:nth-child(1) {
+    animation-delay: 0s;
+}
+.hero-pic:nth-child(2) {
+    animation-delay: -4.5s;
+}
+.hero-pic:nth-child(3) {
+    animation-delay: -9s;
+}
+.hero-pic:nth-child(4) {
+    animation-delay: -13.5s;
+}
+.hero-pic:nth-child(5) {
+    animation-delay: -18s;
+}
+.hero-pic:nth-child(6) {
+    animation-delay: -22.5s;
+}
+.hero-pic:nth-child(7) {
+    animation-delay: -27s;
+}
+.hero-pic:nth-child(8) {
+    animation-delay: -31.5s;
+}
+
+/* THE  ELLIPSE*/
+@keyframes drift {
+    0%,
+    100% {
+        translate: 26vw 0vh;
+    }
+    12.5% {
+        translate: 18vw 13vh;
+    }
+    25% {
+        translate: 0 18vh;
+    }
+    37.5% {
+        translate: -18vw 13vh;
+    }
+    50% {
+        translate: -26vw 0vh;
+    }
+    62.5% {
+        translate: -18vw -13vh;
+    }
+    75% {
+        translate: 0 -18vh;
+    }
+    87.5% {
+        translate: 18vw -13vh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-pic {
+        animation: none;
+    }
+}
+
+/* Progressive blur at the hero edges... */
+.edge-blur {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    pointer-events: none;
+    z-index: 1;
+}
+.edge-blur span {
+    position: absolute;
+    inset: 0;
+    display: block;
+    -webkit-backdrop-filter: blur(var(--b));
+    backdrop-filter: blur(var(--b));
+    /* 3 linear-gradient masks */
+    -webkit-mask-image:
+        linear-gradient(to top, #000 0%, transparent var(--m)),
+        linear-gradient(to left, #000 0%, transparent var(--m)),
+        linear-gradient(to right, #000 0%, transparent var(--m));
+    mask-image:
+        linear-gradient(to top, #000 0%, transparent var(--m)),
+        linear-gradient(to left, #000 0%, transparent var(--m)),
+        linear-gradient(to right, #000 0%, transparent var(--m));
+}
+
+.edge-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    pointer-events: none;
+    z-index: 2;
+    background: var(--color-bg);
+    -webkit-mask-image:
+        linear-gradient(to top, #000 0%, transparent 35%),
+        linear-gradient(to left, #000 0%, transparent 35%),
+        linear-gradient(to right, #000 0%, transparent 35%);
+    mask-image:
+        linear-gradient(to top, #000 0%, transparent 35%),
+        linear-gradient(to left, #000 0%, transparent 35%),
+        linear-gradient(to right, #000 0%, transparent 35%);
+}
+
+/* Each stroke is normalized to a path length of 1 so same time for every letter */
+.draw-name path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    visibility: hidden;
+    animation: draw-stroke 170ms linear forwards;
+}
+
+@keyframes draw-stroke {
+    0% {
+        stroke-dashoffset: 1;
+        visibility: hidden;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        visibility: visible;
+    }
+}
+
+/* Fallback (no scroll-timeline support) */
+.draw-name path {
+    animation-delay: calc((var(--i) - 1) * 170ms);
+}
+
+@supports (animation-timeline: view()) {
+    .hero {
+        height: 300vh;
+        view-timeline: --hero block;
+    }
+
+    .hero-pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        min-height: 0;
+    }
+
+    .draw-name path {
+        animation-name: draw-stroke;
+        animation-timeline: --hero;
+        animation-duration: auto;
+        animation-delay: 0s;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+    }
+
+    /* Each stroke draws across its own equal 1/24 slice of the cover
+       phase, in writing order. --i (1-24) is set inline per <path>. */
+    .draw-name path {
+        animation-range: contain calc((var(--i) - 1) / 24 * 100%) contain
+            calc(var(--i) / 24 * 100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .draw-name path {
+        animation: none;
+        stroke-dashoffset: 0;
+        visibility: visible;
+    }
+}
+
+/* ---- Projects ---- */
+
+.projects {
+    --head-top: 5rem;
+    --row-top: 11rem;
+    padding-block: calc(var(--space) * 4);
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--space) * 3);
+    align-items: start;
+}
+
+.frame {
+    position: sticky;
+    top: var(--head-top);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space) * 1);
+}
+.projects-head {
+    text-align: right;
+    z-index: 2;
+}
+.projects-head h2 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    margin: 0;
+}
+
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1rem;
+}
+
+/* Year markers*/
+.timeline .year {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 700;
+    font-size: 1.45rem;
+    line-height: 1.2;
+    margin-block: 0.6rem;
+}
+.timeline .year:first-child {
+    margin-block-start: 0;
+}
+.timeline .year::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 1.9rem;
+    height: 3px;
+    background: var(--color-fg);
+    border-radius: 1px;
+}
+
+/* ---- Cassettes ---- */
+
+.proj-link {
+    display: block;
+}
+.k7 {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.18s ease;
+}
+.k7-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+.k7-title {
+    position: absolute;
+    inset: 25.6% 20.4% 26.9% 20.7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.5vw, 1.05rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    color: #2a2017;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.timeline .proj:hover .k7 {
+    transform: translateX(0.6rem);
+}
+
+.tv {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    margin-inline: auto;
+    z-index: 10;
+}
+.tv-frame {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    position: relative;
+    z-index: 10;
+}
+.tv-pic {
+    position: absolute;
+    left: 9%;
+    top: 11%;
+    width: 59%;
+    height: 73%;
+    object-fit: cover;
+    border-radius: 6% / 8%;
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: opacity 0.25s ease;
+}
+.tv-screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transition: opacity 0.25s ease;
+}
+.projects-grid:has(.proj:hover) .tv-screen {
+    opacity: 0.5;
+}
+.projects-grid:has(.proj[data-project="mist"]:hover) .tv-pic[data-for="mist"],
+.projects-grid:has(.proj[data-project="serenity"]:hover)
+    .tv-pic[data-for="serenity"],
+.projects-grid:has(.proj[data-project="scc26"]:hover) .tv-pic[data-for="scc26"],
+.projects-grid:has(.proj[data-project="chrysalide"]:hover)
+    .tv-pic[data-for="chrysalide"],
+.projects-grid:has(.proj[data-project="epimac"]:hover)
+    .tv-pic[data-for="epimac"],
+.projects-grid:has(.proj[data-project="ciaocr"]:hover)
+    .tv-pic[data-for="ciaocr"],
+.projects-grid:has(.proj[data-project="horizonlab"]:hover)
+    .tv-pic[data-for="horizonlab"],
+.projects-grid:has(.proj[data-project="coupecoupe"]:hover)
+    .tv-pic[data-for="coupecoupe"] {
+    opacity: 1;
+}
+
+/* ---- Cassette player ---- */
+
+#working-heading {
+    text-align: center;
+    margin-bottom: calc(var(--space) * 2);
+    padding-block: calc(var(--space) * 2) 0;
+}
+
+.k7-link,
+.k7-link .k7-full,
+.k7-link .k7-full img,
+.k7-link .player-back,
+.k7-link .player-front {
+    cursor: pointer;
+}
+.k7-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+}
+
+.k7-link .k7-full {
+    transition:
+        filter 0.3s ease,
+        translate 0.3s ease;
+}
+
+.k7-full:hover,
+.k7-link:focus-visible .k7-full {
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
+    translate: 0 -0.35rem;
+}
+
+.k7-full,
+.player-back,
+.player-front {
+    position: sticky;
+    top: 25vh;
+    width: 100%;
+    max-width: 36rem;
+    margin-inline: auto;
+    aspect-ratio: 2400 / 1792;
+}
+
+.k7-full {
+    z-index: 2;
+}
+.player-back {
+    z-index: 1;
+    pointer-events: none;
+}
+.player-front {
+    z-index: 3;
+}
+
+/* Every layer image is positioned at its canvas-relative coords. */
+.k7-full img,
+.player-back img,
+.player-front img {
+    position: absolute;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* the cassette and bottomcase just fill their sticky containers. */
+.k7-base,
+.player-back img,
+.player-front img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Title written on the cassette label. */
+.k7-text {
+    position: absolute;
+    left: 23.6%;
+    top: 31.25%;
+    width: 26%;
+    height: 5.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(0.8rem, 1.4vw, 1rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #2a2017;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Reels */
+.k7-axis {
+    width: 13.5%;
+    height: 17.86%;
+    transform-origin: 50% 50%;
+    animation: cassette-spin 4s linear infinite paused;
+    will-change: transform;
+}
+.k7-axis-l {
+    left: 30.01%;
+    top: 38.31%;
+}
+.k7-axis-r {
+    left: 58%;
+    top: 38.25%;
+}
+
+.working-spacer {
+    height: 1vh;
+}
+
+/* Hovering the player's clear front cover spins both reels. */
+.k7-link:has(.player-front:hover) .k7-axis,
+.k7-link:focus-visible .k7-axis {
+    animation-play-state: running;
+}
+
+@keyframes cassette-spin {
+    to {
+        rotate: 1turn;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .k7-axis {
+        animation: none;
+    }
+}
+
+/* Mobile (≤40em / 640px) */
+@media (max-width: 40em) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: calc(var(--space) * 1.5);
+        align-items: stretch;
+        margin-top: 10rem;
+    }
+
+    .frame {
+        order: -1;
+        z-index: 6;
+        background: none;
+    }
+    .tv {
+        max-width: 100%;
+    }
+    .timeline .short {
+        display: inline;
+    }
+    .timeline .long {
+        display: none;
+    }
+    .timeline .year {
+        font-size: 1.25rem;
+    }
+
+    /* ---- Mobile-only veil behind .frame ---- */
+
+    .frame-veil {
+        position: absolute;
+        top: calc(-1 * var(--head-top));
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: calc(100% + var(--head-top) + 4rem);
+        pointer-events: none;
+    }
+    .veil-white {
+        position: absolute;
+        inset: 0 0 2rem 0;
+        display: block;
+
+        background: linear-gradient(
+            to bottom,
+            var(--color-bg) 0%,
+            var(--color-bg) 70%,
+            transparent 100%
+        );
+    }
+
+    .veil-blur {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 12rem;
+        display: block;
+        -webkit-backdrop-filter: blur(var(--b));
+        backdrop-filter: blur(var(--b));
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 0%,
+            transparent var(--m)
+        );
+        mask-image: linear-gradient(to bottom, #000 0%, transparent var(--m));
+    }
+
+    /* ---- About: mobile ---- */
+
+    .about {
+        --about-w: min(85vw, 22rem);
+    }
+
+    .about-stage {
+        min-height: 180vh;
+    }
+
+    .about-text {
+        font-size: clamp(1.05rem, 4.4vw, 1.4rem);
+        padding-block: calc(var(--about-w) + 8vh) 40vh;
+    }
+}
+
+/* iPad mini & small tablets (≈641px-1024px) */
+@media (min-width: 40.0625em) and (max-width: 64em) {
+    .projects-grid {
+        gap: calc(var(--space) * 2);
+    }
+
+    .tv {
+        max-width: 24rem;
+    }
+
+    #music .sleeves {
+        grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    }
+
+    .hero-imgs {
+        grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    }
+
+    .about {
+        --about-w: min(75vw, 60vh, 36rem);
+    }
+
+    .about-text {
+        font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    }
+}
+
+/*  Music  */
+#music .sleeves {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-block-start: calc(var(--space) * 1.5);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: calc(var(--space) * 2);
+}
+.sleeve {
+    --t: 0.4s;
+    --e: cubic-bezier(0.5, 0, 0.5, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.sleeve:hover {
+    z-index: 5;
+}
+
+.disc-slot {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    transform: translateY(0);
+    pointer-events: none;
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    transition:
+        transform var(--t) var(--e),
+        filter var(--t) ease;
+}
+.disc {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: transparent;
+    background-size: 115%;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: spin 3s linear infinite;
+    animation-play-state: paused;
+}
+
+.sleeve:hover .disc-slot {
+    transform: translateY(-20%);
+    filter: drop-shadow(-5px 7px 12px rgba(0, 0, 0, 0.32));
+}
+.sleeve:hover .disc {
+    animation-play-state: running;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* Vinyls */
+.v-orange .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_orange.png");
+}
+.v-black .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_black.png");
+}
+.v-green .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_green.png");
+}
+.v-pink .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_pink.png");
+}
+.v-blue .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_tie_blue.png");
+}
+.v-red .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_tie_red.png");
+}
+.v-tiegreen .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_tie_green.png");
+}
+.v-teal .disc {
+    background-image: url("../public/illustrations/vinyls/vinyl_teal.png");
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .disc-slot,
+    .disc {
+        transition: none;
+    }
+    .disc,
+    .sleeve:hover .disc {
+        animation: none;
+    }
+}
+
+.cover {
+    position: relative;
+    z-index: 1;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 3px;
+    background: #e9e2d4;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.18),
+        0 10px 22px rgba(0, 0, 0, 0.12);
+    isolation: isolate;
+    transition:
+        transform var(--t) var(--e),
+        box-shadow 0.18s ease;
+}
+.cover-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+.sleeve:hover .cover {
+    transform: translateY(20%);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.22),
+        0 18px 34px rgba(0, 0, 0, 0.2);
+    transition:
+        transform var(--t) var(--e) 0s,
+        box-shadow 0.18s ease;
+}
+.meta {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+.meta b {
+    color: var(--color-fg);
+    font-weight: 700;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---- About ---- */
+
+.about {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-block: calc(var(--space) * 4);
+    view-timeline: --about block;
+}
+
+.about > h2 {
+    text-align: center;
+    margin-bottom: calc(var(--space) * 3);
+}
+
+/* Single column the width of the camera/portrait, centred. Portrait
+   and text share the same grid cell so the text can sit on top of
+   the portrait (right-aligned over the trees). */
+.about-stage {
+    display: grid;
+    grid-template-columns: var(--about-w);
+    grid-template-areas: "stage";
+    justify-content: center;
+    min-height: 220vh;
+}
+
+.about-portrait,
+.about-veil,
+.about-camera,
+.about-text {
+    grid-area: stage;
+}
+
+/* Camera */
+.about {
+    --about-w: min(100vw, 70vh, 56rem);
+    justify-content: center;
+}
+
+.about-portrait {
+    position: sticky;
+    top: 25%;
+    width: min(40rem, var(--about-w));
+    height: auto;
+    display: block;
+    z-index: 1;
+    border-radius: 0.5rem;
+    user-select: none;
+    -webkit-user-drag: none;
+    align-self: start;
+    justify-self: center;
+}
+
+/* white text scrolls through the same grid cell as the portrait, */
+.about-text {
+    z-index: 4;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.8vw, 1.2rem);
+    line-height: 1.35;
+    width: 40%;
+    margin-left: auto;
+    padding-block: calc(var(--about-w) + 5vh) 60vh;
+}
+
+.about-text p {
+    margin: 0;
+}
+
+.about-text p + p {
+    margin-top: 4rem;
+}
+
+/* Camera */
+.about-camera {
+    width: var(--about-w);
+    height: auto;
+    z-index: 3;
+    align-self: start;
+    justify-self: center;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* White veil behind the camera. */
+.about-veil {
+    position: relative;
+    width: var(--about-w);
+    height: calc(var(--about-w) + 8vh);
+    z-index: 2;
+    align-self: start;
+    justify-self: center;
+    pointer-events: none;
+}
+
+/* Solid page-background colour through the entire camera area */
+.about-veil-white {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: linear-gradient(
+        to bottom,
+        var(--color-bg) 0%,
+        var(--color-bg) calc(var(--about-w) - 4vh),
+        rgba(255, 255, 255, 0.92) calc(var(--about-w) - 1vh),
+        rgba(255, 255, 255, 0.72) calc(var(--about-w) + 1vh),
+        rgba(255, 255, 255, 0.42) calc(var(--about-w) + 3vh),
+        rgba(255, 255, 255, 0.16) calc(var(--about-w) + 6vh),
+        rgba(255, 255, 255, 0.04) calc(var(--about-w) + 7vh),
+        transparent 100%
+    );
+}
+
+/* Progressive backdrop-blur stack same as tv */
+.about-veil-blur {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 22vh;
+    display: block;
+    -webkit-backdrop-filter: blur(var(--b));
+    backdrop-filter: blur(var(--b));
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        transparent var(--m)
+    );
+    mask-image: linear-gradient(to bottom, #000 0%, transparent var(--m));
+}
+
+/* ---- Footer ---- */
+.site-footer {
+    border-top: 1px solid #eee;
+    text-align: center;
+    padding: calc(var(--space) * 2) var(--space);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+}
